@@ -51,7 +51,7 @@ void callInstruction() {
 
 
 void draw_imageError() {
-	cout << "        \n" <<
+	cout << "            \n" <<
 		"   ()()     \n" <<
 		"   (..)     \n" <<
 		"  (' ')     \n" <<
@@ -575,7 +575,7 @@ int main()
 			cin >> x_input;
 		}
 		if (mystack.size() == 0) { error(8); }
-		transform_toPostfix(x_input, mystack, myqueue);
+		transform_toPostfix(               x_input, mystack, myqueue);
 		answer = calculateFormulaInPostfix(x_input, mystack, myqueue);
 		fl_x = 0;
 		if (answer != MIN_INF) {printAnswer(answer);}
