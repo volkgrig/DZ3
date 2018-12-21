@@ -22,6 +22,7 @@ bool    fl_first_compilation = 1;
 void callInstruction() {
 	system("cls");
 	cout <<
+		"     ***Instruction***                                                       \n"   <<
 		" Constants:                                                                  \n"   <<
 		" PI = p                                                                      \n"   <<
 		" Functions:                                                                  \n"   <<
