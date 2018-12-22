@@ -52,7 +52,7 @@ void callInstruction() {
 
 
 void draw_imageError() {
-	cout << "            \n" <<
+	cout << "        \n" <<
 		"   ()()     \n" <<
 		"   (..)     \n" <<
 		"  (' ')     \n" <<
@@ -97,28 +97,29 @@ struct Leksema
 
 void    inputOpenBracket( char ch, int &fl_bin_unarn_minus, int &flag_bracket, int &fl_input_correct, int &kol_bracket_open,  stack <Leksema>& mystack, list <Leksema>& myqueue);
 void    inputCloseBracket(         int &fl_bin_unarn_minus, int &flag_bracket, int &fl_input_correct, int &kol_bracket_close, stack <Leksema>& mystack, list <Leksema>& myqueue);
-void    inputOperand(                       char   ch,                                           stack <Leksema>& mystack, list <Leksema>& myqueue);
-int     getRangOfOperand(                   char   ch                                                                                             );
-double  calculateSin(                                       double x                                                                              );
-double  calculateCos(                                       double x                                                                              );
-void    calculateTrigAndExpAndAddInStack(   char   fl_trig, double x_input,                      stack <Leksema>& mystack, list <Leksema>& myqueue);
-char    check_and_switchTrigonometryAndExp( char   ch                                                                                             );
-void    inputFormula(                                       double x_input, int    flag_bracket, stack <Leksema>& mystack, list <Leksema>& myqueue);
-void    calculateOperForTwoArgsAndAddInStack(               double x_input,                      stack <Leksema>& mystack, list <Leksema>& myqueue);
-bool    is_correctForTwoArguments(                                                               stack <Leksema>  mystack, list <Leksema>  myqueue);
-void    calculateFactAndAddInStack(                         double x_input,                      stack <Leksema>& mystack, list <Leksema>& myqueue);
-double  calculateFormulaInPostfix(                          double x_input,                      stack <Leksema>  mystack, list <Leksema>  myqueue);
-void    transform_toPostfix(                                double x_input,                      stack <Leksema>& mystack, list <Leksema>& myqueue);
+void    inputOperand(                       char   ch,                      stack <Leksema>& mystack, list <Leksema>& myqueue);
+int     getRangOfOperand(                   char   ch                                                                        );
+double  calculateSin(                                       double x                                                         );
+double  calculateCos(                                       double x                                                         );
+void    calculateTrigAndExpAndAddInStack(   char   fl_trig, double x_input, stack <Leksema>& mystack, list <Leksema>& myqueue);
+char    check_and_switchTrigonometryAndExp( char   ch                                                                        );
+void    inputFormula(                                                       stack <Leksema>& mystack, list <Leksema>& myqueue);
+void    calculateOperForTwoArgsAndAddInStack(               double x_input, stack <Leksema>& mystack, list <Leksema>& myqueue);
+bool    is_correctForTwoArguments(                                          stack <Leksema>  mystack, list <Leksema>  myqueue);
+void    calculateFactAndAddInStack(                         double x_input, stack <Leksema>& mystack, list <Leksema>& myqueue);
+double  calculateFormulaInPostfix(                          double x_input, stack <Leksema>  mystack, list <Leksema>  myqueue);
+void    transform_toPostfix(                                                stack <Leksema>& mystack, list <Leksema>& myqueue);
 
 
-void inputFormula(double x_input, int flag_bracket, stack <Leksema>& mystack, list <Leksema>& myqueue) {
+void inputFormula( stack <Leksema>& mystack, list <Leksema>& myqueue) {
 	char   ch;
 	Leksema item;
-	int kol_bracket_open  = 0;
-	int kol_bracket_close = 0;
-	int fl_input_correct;
-	int fl_bin_unarn_minus = 1;
-	int fl_callInstruction = 1;
+	int flag_bracket       = 0;
+	int  kol_bracket_open   = 0;
+	int  kol_bracket_close  = 0;
+	int  fl_input_correct   = 1;
+	int  fl_bin_unarn_minus = 1;
+	int  fl_callInstruction = 1;
 	while (fl_callInstruction)
 	{
 		fl_input_correct = 1;
@@ -306,20 +307,20 @@ char check_and_switchTrigonometryAndExp(char ch1) {
 }
 
 
-void transform_toPostfix(double x_input, stack <Leksema>& mystack, list <Leksema>& myqueue) {
+void transform_toPostfix( stack <Leksema>& mystack, list <Leksema>& myqueue) {
 	if (myqueue.size() == 0) { error(8); }
 	while (mystack.size() > 0)
 	{
 		myqueue.push_back(mystack.top());
 		mystack.pop();
 	}
-	for (list <Leksema>::iterator pos = myqueue.begin(); pos != myqueue.end(); ++pos) {
-		if (pos->value == INF && fl_x) { pos->value = x_input; }
-	}
 }
 
 
 double calculateFormulaInPostfix(double x_input, stack <Leksema> mystack, list <Leksema> myqueue) {
+	for (list <Leksema>::iterator pos = myqueue.begin(); pos != myqueue.end(); ++pos) {
+		if ((pos->value == INF) && fl_x) { pos->value = x_input; }
+	}
 	while (myqueue.size() > 0){
 		if (myqueue.front().type == 0)
 		{
@@ -338,7 +339,7 @@ double calculateFormulaInPostfix(double x_input, stack <Leksema> mystack, list <
 			if (myqueue.front().type == '7') { calculateTrigAndExpAndAddInStack(myqueue.front().type, x_input, mystack, myqueue); continue; }
 			if (myqueue.front().type == '8') { calculateTrigAndExpAndAddInStack(myqueue.front().type, x_input, mystack, myqueue); continue; }
 			if (myqueue.front().type == '9') { calculateTrigAndExpAndAddInStack(myqueue.front().type, x_input, mystack, myqueue); continue; }
-			if (is_correctForTwoArguments(mystack, myqueue)) {calculateOperForTwoArgsAndAddInStack(   x_input, mystack, myqueue);           }
+			if (is_correctForTwoArguments(mystack, myqueue)) {calculateOperForTwoArgsAndAddInStack(   x_input, mystack, myqueue); continue; }
 		}
 	}
 	if (mystack.size() == 0) {
@@ -521,27 +522,57 @@ void printAnswer(double answer) {
 
 bool ask_for_getNewFormula() {
 	system("cls");
-	cout<<"One more? (y/n) \n";
+	cout<<"One more formula? (y/n) \n";
 	char ch;
-	cin.ignore();
+	if (not fl_x) { cin.ignore(); }
 	ch = cin.get();
 	int flag_ask_for_getNewFormula = 0;
 	if (ch == 'y') { flag_ask_for_getNewFormula = 1; }
+	if (fl_x) { cin.ignore(); }
 	return flag_ask_for_getNewFormula;
+}
+
+
+bool ask_for_getNewX() {
+	system("cls");
+	cout << "One more x? (y/n) \n";
+	char ch;
+	cin.ignore();
+	ch = cin.get();
+	int flag_ask_for_getNewX = 0;
+	if (ch == 'y') { flag_ask_for_getNewX = 1; }
+	return flag_ask_for_getNewX;
+}
+
+
+void calculateWithX(stack <Leksema> mystack, list <Leksema> myqueue) {
+	double answer;
+	double x_input = INF;
+	bool   flag_ask_for_getNewX = 1;
+	while (flag_ask_for_getNewX) {
+		cout << "Enter value of x: \n";
+		cin >> x_input;
+		answer = MIN_INF;
+		answer = calculateFormulaInPostfix(x_input, mystack, myqueue);
+		if (answer != MIN_INF) { printAnswer(answer); }
+		flag_ask_for_getNewX = ask_for_getNewX();
+		if (answer != MIN_INF) { cin.ignore(); }
+		system("cls");
+	}
 }
 
 
 void draw_imageGoodbye() {
 	system("cls");
-	cout <<"\n";
-	cout<<
-    " --------                   \n"  <<
-	" | Bye! |                   \n"  <<
-	" |       \\  /\\_/\\        \n"  <<
-	" ---------  |°s°|           \n"  <<
-	"            |''''\\_____/|  \n"  <<
-	"            |_|_|______)    \n"  <<
-	"            |_|_|...|_|_|   \n\n" ;
+	cout << "\n";
+	cout <<
+		" --------                   \n" <<
+		" | Bye! |                   \n" <<
+		" |       \\  /\\_/\\        \n" <<
+		" ---------  |°s°|           \n" <<
+		"            |''''\\_____/|  \n" <<
+		"            |_|_|______)    \n" <<
+		"            |_|_|...|_|_|   \n\n";
 	system("pause");
 }
 
@@ -551,18 +582,17 @@ int main()
 	setlocale(LC_ALL, "RUS");
 	if (fl_first_compilation) { callInstruction(); fl_first_compilation = 0; }
 	int    flag_ask_for_getNewFormula = 1;
-	double answer=MIN_INF;
+	double answer;
 	while (flag_ask_for_getNewFormula) {
+		fl_x = 0;
 		answer = MIN_INF;
-		fl_x  = 0;
 		system("cls");
 		cout << "To call Instruction enter: i \n";
 		cout << "Formula:                     \n";
 		stack <Leksema> mystack;
 		list  <Leksema> myqueue;
 		double x_input      = INF;
-		int    flag_bracket = 0;
-		inputFormula(x_input, flag_bracket, mystack, myqueue);
+		inputFormula(mystack, myqueue);
 		if (mystack.size() > 0) {
 			if (mystack.top().type == 'i') {
 				mystack.pop();
@@ -570,17 +600,16 @@ int main()
 				continue;
 			}
 		}
-		if (fl_x) {
-			cout << "Enter value of x: \n";
-			cin.ignore();
-			cin >> x_input;
-		}
 		if (mystack.size() == 0) { error(8); }
-		transform_toPostfix(               x_input, mystack, myqueue);
-		answer = calculateFormulaInPostfix(x_input, mystack, myqueue);
-		fl_x = 0;
-		if (answer != MIN_INF) {printAnswer(answer);}
-		flag_ask_for_getNewFormula=ask_for_getNewFormula();
+		transform_toPostfix(mystack, myqueue);
+		if (fl_x) {
+			calculateWithX( mystack, myqueue);
+		}
+		else {
+			answer = calculateFormulaInPostfix(INF, mystack, myqueue);
+			if (answer != MIN_INF) { printAnswer(answer); }
+		}
+		flag_ask_for_getNewFormula = ask_for_getNewFormula();
 		if (answer != MIN_INF) { cin.ignore(); }
 	}
 	draw_imageGoodbye();
