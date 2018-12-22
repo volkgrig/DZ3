@@ -77,6 +77,7 @@ void error(int code_mistake = -1) {
 	case 8:  {cout << "Not operands!                                             \n"; break; }
 	case 9:  {cout << "False function!                                           \n"; break; }
 	case 10: {cout << "False bracket!                                            \n"; break; }
+	case 11: {cout << "X is not correct!                                         \n"; break; }
 	default: {cout << "Program mistake                                           \n"; break; }
 	}
 	if (code_mistake==9) { cin.ignore(); }
@@ -551,7 +552,12 @@ void calculateWithX(stack <Leksema> mystack, list <Leksema> myqueue) {
 	bool   flag_ask_for_getNewX = 1;
 	while (flag_ask_for_getNewX) {
 		cout << "Enter value of x: \n";
-		cin >> x_input;
+		char x[256];
+		std::cin >> x;
+		if ( not atof(x)) {
+			error(11);
+		}
+                x_input=atof(x);
 		answer = MIN_INF;
 		answer = calculateFormulaInPostfix(x_input, mystack, myqueue);
 		if (answer != MIN_INF) { printAnswer(answer); }
